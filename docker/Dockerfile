@@ -28,8 +28,7 @@ ENV SUBMODULE_DIR=/SHiELD
 COPY submodules ${SUBMODULE_DIR}/
 
 # Build FMS, NCEPlibs, and SHiELD using SHiELD_build
-# FMS_CPPDEFS needed to address https://github.com/NOAA-GFDL/FMS/issues/426 and
-# to build FMS with the -fPIC flag, which is required for the wrapper.
+# FMS_CPPDEFS needed to address https://github.com/NOAA-GFDL/FMS/issues/426
 RUN cd ${SUBMODULE_DIR}/SHiELD_build/Build && \
     FMS_CPPDEFS="-DHAVE_GETTID" \
     FC=${SHiELD_FC} \
