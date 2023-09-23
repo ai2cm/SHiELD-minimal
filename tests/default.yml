@@ -133,9 +133,9 @@ diag_table:
     time_axis_name: time
     time_axis_units: minutes
 experiment_name: default
-field_table: gs://vcm-fv3config/config/field_table/TKE-EDMF/v1.1/field_table
-forcing: gs://vcm-ml-experiments/spencerc/2023-09-13-SHiELD-forcing-data
-initial_conditions: gs://vcm-fv3config/data/initial_conditions/gfs_c12_example/v1.0
+field_table: /input_data/field_table
+forcing: /input_data/forcing
+initial_conditions: /input_data/initial_conditions
 namelist:
   fms_affinity_nml:
     affinity: false
@@ -468,4 +468,4 @@ namelist:
     stress_ratio: 1.0
     use_old_mlm: true
     use_rain_flux: true
-orographic_forcing: gs://vcm-fv3config/data/orographic_data/v1.0
+orographic_forcing: /input_data/orographic_forcing
