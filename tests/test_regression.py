@@ -1,4 +1,3 @@
-import copy
 import hashlib
 import os
 import shutil
@@ -12,30 +11,13 @@ from pathlib import Path
 
 
 CONFIG_DIR = Path(__file__).parent
-INPUT_DATA_DIR = CONFIG_DIR.parent / "input_data"
 EXECUTABLE = Path("/SHiELD/SHiELD_build/Build/bin/SHiELD_nh.prod.64bit.gnu.x")
 
 
 def get_config(filename):
     config_filename = CONFIG_DIR / filename
     with open(config_filename, "r") as f:
-        return prepare_config(fv3config.load(f))
-
-
-def prepare_config(config: dict) -> dict:
-    """Convert GCS paths to local paths"""
-    result = copy.deepcopy(config)
-
-    forcing = INPUT_DATA_DIR / "forcing"
-    orographic_forcing = INPUT_DATA_DIR / "orographic_forcing"
-    initial_conditions = INPUT_DATA_DIR / "initial_conditions"
-    field_table = INPUT_DATA_DIR / "field_table"
-    
-    result["forcing"] = forcing.as_uri()
-    result["orographic_forcing"] = orographic_forcing.as_uri()
-    result["initial_conditions"] = initial_conditions.as_uri()
-    result["field_table"] = field_table.as_uri()
-    return result
+        return fv3config.load(f)
     
 
 def checksum_file(path: Path) -> str:
