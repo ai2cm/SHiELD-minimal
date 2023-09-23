@@ -19,6 +19,7 @@ jobs:
             echo "export GCLOUD_SERVICE_KEY=\$(echo \$ENCODED_GOOGLE_CREDENTIALS | base64 --decode)" >> $BASH_ENV
       - gcp-gcr/gcr-auth
       - run: make build
+      - run: make download_input_data
       - run: make test
 
 workflows:
