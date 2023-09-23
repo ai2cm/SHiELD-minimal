@@ -1,5 +1,7 @@
+import copy
 import hashlib
 import os
+import shutil
 import subprocess
 import typing
 
@@ -10,14 +12,31 @@ from pathlib import Path
 
 
 CONFIG_DIR = Path(__file__).parent
+INPUT_DATA_DIR = CONFIG_DIR.parent / "input_data"
 EXECUTABLE = Path("/SHiELD/SHiELD_build/Build/bin/SHiELD_nh.prod.64bit.gnu.x")
 
 
 def get_config(filename):
     config_filename = CONFIG_DIR / filename
     with open(config_filename, "r") as f:
-        return fv3config.load(f)
+        return prepare_config(fv3config.load(f))
 
+
+def prepare_config(config: dict) -> dict:
+    """Convert GCS paths to local paths"""
+    result = copy.deepcopy(config)
+
+    forcing = INPUT_DATA_DIR / "forcing"
+    orographic_forcing = INPUT_DATA_DIR / "orographic_forcing"
+    initial_conditions = INPUT_DATA_DIR / "initial_conditions"
+    field_table = INPUT_DATA_DIR / "field_table"
+    
+    result["forcing"] = forcing.as_uri()
+    result["orographic_forcing"] = orographic_forcing.as_uri()
+    result["initial_conditions"] = initial_conditions.as_uri()
+    result["field_table"] = field_table.as_uri()
+    return result
+    
 
 def checksum_file(path: Path) -> str:
     sum = hashlib.md5()
@@ -36,7 +55,12 @@ def get_rundir_netcdfs(rundir: Path) -> typing.List[Path]:
     diagnostics_files = sorted(rundir.glob("*.nc"))
     restart_files = sorted(restart_directory.glob("*.nc"))
     return diagnostics_files + restart_files    
-        
+
+
+def checksum_rundir_to_dict(rundir: Path) -> typing.Dict[str, str]:
+    rundir_netcdfs = get_rundir_netcdfs(rundir)
+    return {file.name: checksum_file(file) for file in rundir_netcdfs}
+
 
 def checksum_rundir_to_file(rundir: Path, file: Path):
     """checksum rundir storing output in file"""
@@ -65,8 +89,33 @@ def run_fortran_executable(config: dict, rundir: Path):
 
 
 def test_regression_fortran(tmp_path: Path, regtest):
+    """Quickly test that the executable produces an identical result
+    with previous build.
+    """
     config = get_config("default.yml")
-    rundir_fortran = tmp_path / "rundir-fortran"
+    rundir = tmp_path / "rundir"
 
-    run_fortran_executable(config, rundir_fortran)
-    checksum_rundir_to_file(rundir_fortran, file=regtest)
+    run_fortran_executable(config, rundir)
+    checksum_rundir_to_file(rundir, file=regtest)
+
+
+def test_reproducibility(tmp_path: Path, regtest):
+    """Test that the executable repeatedly produces the same result. This also
+    tests that results are reproducible across builds, but is slower."""
+    config = get_config("default.yml")
+    rundir = tmp_path / "rundir"
+
+    for i in range(5):
+        run_fortran_executable(config, rundir)
+        if i == 0:
+            expected = checksum_rundir_to_dict(rundir)
+        else:
+            result = checksum_rundir_to_dict(rundir)
+            assert result == expected
+        if i < 4:
+            # Preserve the run directory from the last iteration to log the
+            # checksums with regtest.
+            shutil.rmtree(rundir)
+
+    checksum_rundir_to_file(rundir, file=regtest)
+        

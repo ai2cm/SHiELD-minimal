@@ -371,7 +371,7 @@ namelist:
     cnvgwd: true
     debug: false
     do_deep: true
-    do_ocean: true
+    do_ocean: false
     dspheat: true
     fhcyc: 24.0
     fhlwr: 3600.0
