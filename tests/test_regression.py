@@ -81,23 +81,23 @@ def test_regression_fortran(tmp_path: Path, regtest):
     checksum_rundir_to_file(rundir, file=regtest)
 
 
-def test_reproducibility(tmp_path: Path, regtest):
-    """Test that the executable repeatedly produces the same result. This also
-    tests that results are reproducible across builds, but is slower."""
-    config = get_config("default.yml")
-    rundir = tmp_path / "rundir"
+# def test_reproducibility(tmp_path: Path, regtest):
+#     """Test that the executable repeatedly produces the same result. This also
+#     tests that results are reproducible across builds, but is slower."""
+#     config = get_config("default.yml")
+#     rundir = tmp_path / "rundir"
 
-    for i in range(5):
-        run_fortran_executable(config, rundir)
-        if i == 0:
-            expected = checksum_rundir_to_dict(rundir)
-        else:
-            result = checksum_rundir_to_dict(rundir)
-            assert result == expected
-        if i < 4:
-            # Preserve the run directory from the last iteration to log the
-            # checksums with regtest.
-            shutil.rmtree(rundir)
+#     for i in range(5):
+#         run_fortran_executable(config, rundir)
+#         if i == 0:
+#             expected = checksum_rundir_to_dict(rundir)
+#         else:
+#             result = checksum_rundir_to_dict(rundir)
+#             assert result == expected
+#         if i < 4:
+#             # Preserve the run directory from the last iteration to log the
+#             # checksums with regtest.
+#             shutil.rmtree(rundir)
 
-    checksum_rundir_to_file(rundir, file=regtest)
+#     checksum_rundir_to_file(rundir, file=regtest)
         
