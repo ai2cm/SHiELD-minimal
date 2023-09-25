@@ -17,7 +17,8 @@ RUN apt-get update && \
     python3 \
     python3-dev \
     python3-pip \
-    python3-setuptools
+    python3-setuptools \
+    python3-venv
 
 ENV SHiELD_FC=mpif90
 ENV SHiELD_CC=mpicc
@@ -39,10 +40,13 @@ RUN cd ${SUBMODULE_DIR}/SHiELD_build/Build && \
     AVX_LEVEL=-march=native \
     ./COMPILE shield 64bit gnu
 
+RUN python3 -m venv /opt/wrapper-env
+ENV VIRTUAL_ENV=/opt/wrapper-env
+ENV PATH=/opt/wrapper-env/bin:${PATH}
 COPY requirements.txt /tmp
 RUN \
     FC=${SHiELD_FC} \
     CC=${SHiELD_CC} \
     CXX=${SHiELD_CXX} \
     LD=${SHiELD_LD} \
-    python3 -m pip install -r /tmp/requirements.txt --break-system-packages
+    python3 -m pip install -r /tmp/requirements.txt
