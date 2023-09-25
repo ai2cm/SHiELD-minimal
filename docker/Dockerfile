@@ -1,9 +1,3 @@
-# FROM ubuntu@sha256:b492494d8e0113c4ad3fe4528a4b5ff89faa5331f7d52c5c138196f69ce176a6
-
-# Try using an older Ubuntu image with older GNU compilers.  FMS can't build.
-# FROM ubuntu@sha256:9101220a875cee98b016668342c489ff0674f247f6ca20dfc91b91c0f28581ae
-
-# Latest image
 FROM ubuntu@sha256:225b8671859bb22eb895a2d97cd5fc56aff22880dfae6cf486650a39a19b64e3
 
 RUN apt-get update && \

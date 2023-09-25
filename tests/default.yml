@@ -181,7 +181,7 @@ namelist:
     dt_atmos: 900
     dt_ocean: 900
     hours: 0
-    minutes: 15
+    minutes: 30
     months: 0
     seconds: 0
     use_hyper_thread: false
