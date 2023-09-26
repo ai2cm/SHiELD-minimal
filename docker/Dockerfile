@@ -19,9 +19,13 @@ RUN apt-get update && \
     python3-pip \
     python3-setuptools
 
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 50
-RUN update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-12 50
-RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 50
+# Ensure version 12.3 GNU compilers are used instead of the default version
+# 11.4 compilers installed in this 22.04 Ubuntu base image.  Version 11.4
+# compilers lead to reproducibility issues:
+# https://github.com/NOAA-GFDL/SHiELD_build/issues/25.
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 1
+RUN update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-12 1
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 1
 
 ENV SHiELD_FC=mpif90
 ENV SHiELD_CC=mpicc
