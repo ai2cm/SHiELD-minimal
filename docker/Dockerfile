@@ -3,9 +3,9 @@ FROM ubuntu@sha256:b492494d8e0113c4ad3fe4528a4b5ff89faa5331f7d52c5c138196f69ce17
 RUN apt-get update && \
     DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     cmake \
-    gcc \
-    gfortran \
-    g++ \
+    gcc-12 \
+    gfortran-12 \
+    g++-12 \
     git \
     libmpich-dev \
     libnetcdf-dev \
@@ -18,6 +18,10 @@ RUN apt-get update && \
     python3-dev \
     python3-pip \
     python3-setuptools
+
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 50
+RUN update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-12 50
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 50
 
 ENV SHiELD_FC=mpif90
 ENV SHiELD_CC=mpicc
