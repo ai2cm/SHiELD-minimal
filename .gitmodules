@@ -1,6 +1,6 @@
 [submodule "submodules/SHiELD_build"]
 	path = submodules/SHiELD_build
-	url = https://github.com/NOAA-GFDL/SHiELD_build.git
+	url = https://github.com/spencerkclark/SHiELD_build.git
 [submodule "submodules/SHiELD_SRC/GFDL_atmos_cubed_sphere"]
 	path = submodules/SHiELD_SRC/GFDL_atmos_cubed_sphere
 	url = https://github.com/NOAA-GFDL/GFDL_atmos_cubed_sphere
